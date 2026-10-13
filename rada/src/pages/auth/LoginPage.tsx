@@ -44,26 +44,22 @@ export default function LoginPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-primary-950 px-4 py-6 sm:px-6 sm:py-10">
-      <div className="absolute inset-0 bg-[url('/images/image.png')] bg-cover bg-center" />
-      <div className="absolute inset-0 bg-primary-950/35" />
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-950/50 via-transparent to-primary-900/45" />
-
       <div className="relative z-10 flex min-h-[calc(100vh-3rem)] items-center justify-center sm:min-h-[calc(100vh-5rem)]">
-        <section className="w-full max-w-[448px] rounded-[28px] bg-white/95 p-6 shadow-2xl shadow-primary-950/30 backdrop-blur-md sm:p-9">
+        <section className="w-full max-w-[448px] rounded-[28px] border border-white/20 bg-[linear-gradient(rgba(5,35,82,0.6),rgba(5,35,82,0.6)),url('/images/image%20copy%202.png')] bg-cover bg-center p-6 shadow-2xl shadow-primary-950/50 backdrop-blur-md sm:p-9">
           <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="inline-flex items-center gap-2.5 text-neutral-900">
+            <Link to="/" className="inline-flex items-center gap-2.5 text-white">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm">
                 <Heart size={21} fill="currentColor" strokeWidth={2.2} />
               </span>
               <span>
                 <span className="block text-sm font-bold leading-tight">KHWWC</span>
-                <span className="block text-[10px] font-medium leading-tight text-neutral-500">Kirinyaga Healthcare Workers Welfare</span>
+                <span className="block text-[10px] font-medium leading-tight text-white/75">Kirinyaga Healthcare Workers Welfare</span>
               </span>
             </Link>
             <button
               type="button"
               onClick={() => setDemoMode(!demoMode)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-2.5 py-1.5 text-[10px] font-semibold text-neutral-500 transition-colors hover:border-primary-300 hover:text-primary-700"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/35 px-2.5 py-1.5 text-[10px] font-semibold text-white/85 transition-colors hover:border-white hover:text-white"
               title={demoMode ? 'Switch to production mode' : 'Switch to demo mode'}
             >
               {demoMode ? <FlaskConical size={12} /> : <Cloud size={12} />}
@@ -72,8 +68,8 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-10 text-center sm:mt-12">
-            <h1 className="text-[30px] font-bold tracking-tight text-primary-700 sm:text-[34px]">Welcome back</h1>
-            <p className="mt-2 text-sm leading-6 text-neutral-500">Sign in to access your KHWWC account</p>
+            <h1 className="text-[30px] font-bold tracking-tight text-white sm:text-[34px]">Welcome back</h1>
+            <p className="mt-2 text-sm leading-6 text-white/80">Sign in to access your KHWWC account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -85,7 +81,7 @@ export default function LoginPage() {
             )}
 
             <label className="block">
-              <span className="mb-2 block text-xs font-medium text-neutral-600">Phone number</span>
+              <span className="mb-2 block text-xs font-medium text-white/90">Phone number</span>
               <span className="relative block">
                 <Phone size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
@@ -93,7 +89,7 @@ export default function LoginPage() {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="0700 000 000"
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
+                  className="w-full rounded-xl border border-white/45 bg-white/90 px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-500 focus:border-white focus:ring-4 focus:ring-white/30"
                   required
                   autoFocus
                   autoComplete="tel"
@@ -102,7 +98,7 @@ export default function LoginPage() {
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-xs font-medium text-neutral-600">Password</span>
+              <span className="mb-2 block text-xs font-medium text-white/90">Password</span>
               <span className="relative block">
                 <Lock size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
@@ -110,7 +106,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
+                  className="w-full rounded-xl border border-white/45 bg-white/90 px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-500 focus:border-white focus:ring-4 focus:ring-white/30"
                   required
                   autoComplete="current-password"
                 />
@@ -131,18 +127,18 @@ export default function LoginPage() {
           </form>
 
           {demoMode && (
-            <div className="mt-7 rounded-xl border border-neutral-100 bg-neutral-50 p-3.5">
-              <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">Demo access</p>
+            <div className="mt-7 rounded-xl border border-white/20 bg-black/15 p-3.5">
+              <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-white/75">Demo access</p>
               <div className="grid grid-cols-2 gap-1.5">
                 {demoAccounts.map(account => (
                   <button
                     key={account.phone}
                     type="button"
                     onClick={() => { setPhone(account.phone); setPassword('demo123'); }}
-                    className="rounded-lg px-2.5 py-2 text-left text-xs text-neutral-600 transition-colors hover:bg-white hover:text-primary-700"
+                    className="rounded-lg px-2.5 py-2 text-left text-xs text-white/85 transition-colors hover:bg-white/15 hover:text-white"
                   >
                     <span className="block font-semibold">{account.role}</span>
-                    <span className="block text-[10px] text-neutral-400">{account.phone}</span>
+                    <span className="block text-[10px] text-white/60">{account.phone}</span>
                   </button>
                 ))}
               </div>
@@ -150,13 +146,13 @@ export default function LoginPage() {
           )}
 
           {!demoMode && (
-            <p className="mt-6 rounded-xl border border-primary-100 bg-primary-50 px-3 py-2.5 text-center text-xs text-primary-700">
+            <p className="mt-6 rounded-xl border border-white/20 bg-black/15 px-3 py-2.5 text-center text-xs text-white/85">
               Live mode uses your account and current welfare records.
             </p>
           )}
 
-          <div className="mt-8 flex items-center justify-between border-t border-neutral-100 pt-5 text-xs text-neutral-400">
-            <Link to="/" className="transition-colors hover:text-primary-700">← Back to website</Link>
+          <div className="mt-8 flex items-center justify-between border-t border-white/25 pt-5 text-xs text-white/65">
+            <Link to="/" className="transition-colors hover:text-white">← Back to website</Link>
             <span>© 2026 KHWWC</span>
           </div>
         </section>
