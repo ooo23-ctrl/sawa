@@ -43,9 +43,9 @@ export default function LoginPage() {
   ];
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-primary-950 px-4 py-6 sm:px-6 sm:py-10">
-      <div className="relative z-10 flex min-h-[calc(100vh-3rem)] items-center justify-center sm:min-h-[calc(100vh-5rem)]">
-        <section className="w-full max-w-[448px] rounded-[28px] border border-white/20 bg-[linear-gradient(rgba(5,35,82,0.6),rgba(5,35,82,0.6)),url('/images/image%20copy%202.png')] bg-cover bg-center p-6 shadow-2xl shadow-primary-950/50 backdrop-blur-md sm:p-9">
+    <main className="relative min-h-screen overflow-hidden bg-primary-950 px-0 py-0 sm:px-6 sm:py-10">
+      <div className="relative z-10 flex min-h-screen items-center justify-center">
+        <section className="min-h-screen w-full max-w-[448px] rounded-none border-0 border-white/20 bg-[linear-gradient(rgba(5,35,82,0.6),rgba(5,35,82,0.6)),url('/images/image%20copy%202.png')] bg-cover bg-center p-6 shadow-none backdrop-blur-md sm:min-h-0 sm:rounded-[28px] sm:border sm:p-9 sm:shadow-2xl sm:shadow-primary-950/50">
           <div className="flex items-center justify-between gap-4">
             <Link to="/" className="inline-flex items-center gap-2.5 text-white">
               <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="h-10 w-10 rounded-full object-cover bg-white shadow-sm" />
