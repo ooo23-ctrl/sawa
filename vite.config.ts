@@ -9,6 +9,12 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./rada/src', import.meta.url)),
     },
   },
+  server: {
+    host: '0.0.0.0',
+  },
+  preview: {
+    host: '0.0.0.0',
+  },
   optimizeDeps: {
     include: ['xlsx'],
     exclude: ['lucide-react'],
