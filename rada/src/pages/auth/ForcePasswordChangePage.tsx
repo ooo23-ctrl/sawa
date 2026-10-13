@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Lock, AlertCircle } from 'lucide-react';
+import { Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { Button, Input } from '@/components/ui';
 
@@ -38,9 +38,7 @@ export default function ForcePasswordChangePage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-neutral-50">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2.5 mb-8 justify-center">
-          <div className="w-10 h-10 rounded-xl bg-primary-700 flex items-center justify-center text-white">
-            <Heart size={22} strokeWidth={2.5} />
-          </div>
+          <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-10 h-10 rounded-full object-cover bg-white" />
           <div>
             <p className="text-base font-bold text-neutral-900 leading-tight">KHWWC</p>
             <p className="text-xs text-neutral-400 leading-tight">Password Reset Required</p>

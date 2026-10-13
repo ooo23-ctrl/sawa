@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Heart, Menu, X, Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Menu, X, Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { classNames } from '@/lib/format';
 
 const publicNav = [
@@ -28,9 +28,7 @@ export function PublicLayout({ children }: { children?: ReactNode }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-                <Heart size={20} strokeWidth={2.5} />
-              </div>
+              <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-10 h-10 rounded-full object-cover bg-white" />
               <div>
                 <p className="text-sm font-bold text-neutral-900 leading-tight">KHWWC</p>
                 <p className="text-2xs text-neutral-400 leading-tight hidden sm:block">Kirinyaga Healthcare Workers Welfare</p>
@@ -96,9 +94,7 @@ export function PublicLayout({ children }: { children?: ReactNode }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-                  <Heart size={20} strokeWidth={2.5} />
-                </div>
+                <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-10 h-10 rounded-full object-cover bg-white" />
                 <div>
                   <p className="text-sm font-bold text-white leading-tight">KHWWC</p>
                   <p className="text-2xs text-neutral-500 leading-tight">Healthcare Workers Welfare</p>

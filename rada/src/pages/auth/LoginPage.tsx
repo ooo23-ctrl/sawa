@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AlertCircle, ArrowRight, Cloud, FlaskConical, Heart, Lock, Phone } from 'lucide-react';
+import { AlertCircle, ArrowRight, Cloud, FlaskConical, Lock, Phone } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 
 export default function LoginPage() {
@@ -48,9 +48,7 @@ export default function LoginPage() {
         <section className="w-full max-w-[448px] rounded-[28px] border border-white/20 bg-[linear-gradient(rgba(5,35,82,0.6),rgba(5,35,82,0.6)),url('/images/image%20copy%202.png')] bg-cover bg-center p-6 shadow-2xl shadow-primary-950/50 backdrop-blur-md sm:p-9">
           <div className="flex items-center justify-between gap-4">
             <Link to="/" className="inline-flex items-center gap-2.5 text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm">
-                <Heart size={21} fill="currentColor" strokeWidth={2.2} />
-              </span>
+              <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="h-10 w-10 rounded-full object-cover bg-white shadow-sm" />
               <span>
                 <span className="block text-sm font-bold leading-tight">KHWWC</span>
                 <span className="block text-[10px] font-medium leading-tight text-white/75">Kirinyaga Healthcare Workers Welfare</span>

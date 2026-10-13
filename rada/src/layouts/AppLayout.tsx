@@ -8,7 +8,7 @@ import {
   ClipboardList, BadgeCheck, Globe, FileEdit, Inbox, Image, Mail,
   SlidersHorizontal, BarChart3, RefreshCw, Scale, Activity, Database,
   Server, Search, Wrench, ScrollText, Shield, Key, Lock, LogIn,
-  Home, X, ChevronDown, LogOut, UserCog, Heart, Menu, FlaskConical, Cloud, ToggleLeft, ToggleRight,
+  Home, X, ChevronDown, LogOut, UserCog, Menu, FlaskConical, Cloud, ToggleLeft, ToggleRight,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth, roleLabels, roleDashboardPath } from '@/auth/AuthContext';
@@ -25,7 +25,7 @@ const iconMap: Record<string, LucideIcon> = {
   ClipboardList, BadgeCheck, Globe, FileEdit, Inbox, Image, Mail,
   SlidersHorizontal, BarChart3, RefreshCw, Scale, Activity, Database,
   Server, Search, Wrench, ScrollText, Shield, Key, Lock, LogIn,
-  Home, Heart, UserCog,
+  Home, UserCog,
 };
 
 function NavIcon({ name, size = 18, className }: { name: string; size?: number; className?: string }) {
@@ -75,9 +75,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
       <aside className="hidden lg:flex w-64 flex-col bg-neutral-950 fixed inset-y-0 left-0 z-30">
         <div className="px-5 py-5 border-b border-white/5">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-              <Heart size={20} strokeWidth={2.5} />
-            </div>
+            <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-10 h-10 rounded-full object-cover bg-white" />
             <div>
               <p className="text-sm font-bold text-white leading-tight">KHWWC</p>
               <p className="text-2xs text-neutral-500 leading-tight">Welfare Management</p>
@@ -165,9 +163,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
           <aside className="absolute left-0 inset-y-0 w-72 bg-neutral-950 shadow-float-lg overflow-y-auto scrollbar-hide animate-slide-up" onClick={e => e.stopPropagation()}>
             <div className="px-5 py-5 border-b border-white/5 flex items-center justify-between">
               <Link to="/" className="flex items-center gap-2.5" onClick={() => setSidebarOpen(false)}>
-                <div className="w-9 h-9 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-                  <Heart size={20} strokeWidth={2.5} />
-                </div>
+                <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-10 h-10 rounded-full object-cover bg-white" />
                 <div>
                   <p className="text-sm font-bold text-white leading-tight">KHWWC</p>
                   <p className="text-2xs text-neutral-500 leading-tight">Welfare Management</p>
@@ -246,9 +242,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
             <Menu size={22} />
           </button>
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-              <Heart size={16} strokeWidth={2.5} />
-            </div>
+            <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="w-8 h-8 rounded-full object-cover bg-white" />
             <span className="text-sm font-bold text-neutral-900">KHWWC</span>
           </Link>
           <Link to="/member/notifications" className="btn-ghost p-1.5 -mr-1.5 relative" aria-label="Notifications">
