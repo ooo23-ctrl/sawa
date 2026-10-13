@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Heart, Phone, Lock, AlertCircle, ArrowRight, FlaskConical, Cloud } from 'lucide-react';
+import { AlertCircle, ArrowRight, Cloud, FlaskConical, Heart, Lock, Phone } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
-import { Button } from '@/components/ui';
 
 export default function LoginPage() {
   const { login, demoMode, setDemoMode } = useAuth();
@@ -22,6 +21,7 @@ export default function LoginPage() {
         : user.role === 'admin' ? '/admin'
         : user.role === 'treasurer' ? '/treasurer'
         : user.role === 'secretary' ? '/secretary'
+        : user.role === 'vice-secretary' ? '/vice-secretary'
         : user.role === 'chairperson' ? '/chairperson'
         : user.role === 'office' ? '/office'
         : '/super-admin';
@@ -43,150 +43,124 @@ export default function LoginPage() {
   ];
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left panel — N26 saturated teal brand surface */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary-500 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-800" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-300/10 rounded-full blur-3xl translate-y-1/3" />
+    <main className="relative min-h-screen overflow-hidden bg-primary-950 px-4 py-6 sm:px-6 sm:py-10">
+      <div className="absolute inset-0 bg-[url('/images/image.png')] bg-cover bg-center" />
+      <div className="absolute inset-0 bg-primary-950/35" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-950/50 via-transparent to-primary-900/45" />
 
-        <div className="relative z-10 flex flex-col justify-between p-12 text-white">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-lg bg-white/15 backdrop-blur flex items-center justify-center">
-              <Heart size={24} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="text-lg font-bold leading-tight">KHWWC</p>
-              <p className="text-xs text-primary-100 leading-tight">Kirinyaga Healthcare Workers Welfare</p>
-            </div>
-          </Link>
-
-          <div className="max-w-md">
-            <h1 className="text-3xl font-bold leading-tight mb-4 tracking-tight">Supporting those who care for our community</h1>
-            <p className="text-primary-50 text-base leading-relaxed">
-              Member portal for contributions, beneficiaries, statements, donations, events, and more. Sign in to access your welfare account.
-            </p>
-            <div className="mt-8 space-y-3">
-              {['Manage contributions and payments', 'Access statements and documents', 'Track beneficiaries and notifications'].map(feature => (
-                <div key={feature} className="flex items-center gap-3 text-sm text-primary-50">
-                  <div className="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
-                    <Heart size={12} />
-                  </div>
-                  {feature}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <p className="text-xs text-primary-200">© 2026 KHWWC. All rights reserved.</p>
-        </div>
-      </div>
-
-      {/* Right panel — login form on clean white */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8 bg-white">
-        <div className="w-full max-w-sm">
-          <div className="lg:hidden flex items-center gap-2.5 mb-8 justify-center">
-            <div className="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center text-white">
-              <Heart size={22} strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="text-base font-bold text-neutral-900 leading-tight">KHWWC</p>
-              <p className="text-xs text-neutral-400 leading-tight">Healthcare Workers Welfare</p>
-            </div>
-          </div>
-
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Welcome back</h2>
-              <p className="mt-1 text-sm text-neutral-500">Sign in to access your account</p>
-            </div>
+      <div className="relative z-10 flex min-h-[calc(100vh-3rem)] items-center justify-center sm:min-h-[calc(100vh-5rem)]">
+        <section className="w-full max-w-[448px] rounded-[28px] bg-white/95 p-6 shadow-2xl shadow-primary-950/30 backdrop-blur-md sm:p-9">
+          <div className="flex items-center justify-between gap-4">
+            <Link to="/" className="inline-flex items-center gap-2.5 text-neutral-900">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm">
+                <Heart size={21} fill="currentColor" strokeWidth={2.2} />
+              </span>
+              <span>
+                <span className="block text-sm font-bold leading-tight">KHWWC</span>
+                <span className="block text-[10px] font-medium leading-tight text-neutral-500">Kirinyaga Healthcare Workers Welfare</span>
+              </span>
+            </Link>
             <button
               type="button"
               onClick={() => setDemoMode(!demoMode)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-neutral-50 px-2.5 py-2 text-xs font-medium text-neutral-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
+              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-2.5 py-1.5 text-[10px] font-semibold text-neutral-500 transition-colors hover:border-primary-300 hover:text-primary-700"
               title={demoMode ? 'Switch to production mode' : 'Switch to demo mode'}
             >
-              {demoMode ? <FlaskConical size={14} /> : <Cloud size={14} />}
-              {demoMode ? 'Demo' : 'Production'}
+              {demoMode ? <FlaskConical size={12} /> : <Cloud size={12} />}
+              {demoMode ? 'Demo' : 'Live'}
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div className="mt-10 text-center sm:mt-12">
+            <h1 className="text-[30px] font-bold tracking-tight text-primary-700 sm:text-[34px]">Welcome back</h1>
+            <p className="mt-2 text-sm leading-6 text-neutral-500">Sign in to access your KHWWC account</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {error && (
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-error-50 border border-error-200 text-sm text-error-700">
-                <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5 rounded-xl border border-error-200 bg-error-50 p-3.5 text-sm text-error-700">
+                <AlertCircle size={17} className="mt-0.5 flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            <div>
-              <label className="label">Phone Number</label>
-              <div className="relative">
-                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <label className="block">
+              <span className="mb-2 block text-xs font-medium text-neutral-600">Phone number</span>
+              <span className="relative block">
+                <Phone size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type="tel"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="0700 000 000"
-                  className="input-field pl-9"
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
                   required
                   autoFocus
                   autoComplete="tel"
                 />
-              </div>
-            </div>
+              </span>
+            </label>
 
-            <div>
-              <label className="label">Password</label>
-              <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <label className="block">
+              <span className="mb-2 block text-xs font-medium text-neutral-600">Password</span>
+              <span className="relative block">
+                <Lock size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="input-field pl-9"
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3.5 pl-11 text-sm text-neutral-900 outline-none transition-all placeholder:text-neutral-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
                   required
+                  autoComplete="current-password"
                 />
-              </div>
-            </div>
+              </span>
+            </label>
 
-            <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary-600/20 transition-all hover:bg-primary-700 hover:shadow-primary-600/30 focus:outline-none focus:ring-4 focus:ring-primary-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               {loading ? (
-                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Signing in...</>
+                <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> Signing in...</>
               ) : (
-                <>Sign In <ArrowRight size={16} /></>
+                <>Sign in <ArrowRight size={16} /></>
               )}
-            </Button>
+            </button>
           </form>
 
-          {demoMode && <div className="mt-6 p-4 rounded-lg bg-neutral-50 border border-neutral-100">
-            <p className="text-xs font-medium text-neutral-500 mb-2.5">Demo accounts (any password works):</p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {demoAccounts.map(acc => (
-                <button
-                  key={acc.phone}
-                  onClick={() => { setPhone(acc.phone); setPassword('demo123'); }}
-                  className="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-600 hover:bg-white hover:text-neutral-900 transition-colors"
-                >
-                  <p className="font-medium">{acc.role}</p>
-                  <p className="text-neutral-400 truncate">{acc.phone}</p>
-                </button>
-              ))}
+          {demoMode && (
+            <div className="mt-7 rounded-xl border border-neutral-100 bg-neutral-50 p-3.5">
+              <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">Demo access</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {demoAccounts.map(account => (
+                  <button
+                    key={account.phone}
+                    type="button"
+                    onClick={() => { setPhone(account.phone); setPassword('demo123'); }}
+                    className="rounded-lg px-2.5 py-2 text-left text-xs text-neutral-600 transition-colors hover:bg-white hover:text-primary-700"
+                  >
+                    <span className="block font-semibold">{account.role}</span>
+                    <span className="block text-[10px] text-neutral-400">{account.phone}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>}
+          )}
 
           {!demoMode && (
-            <p className="mt-6 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2.5 text-center text-xs text-blue-700">
-              Production mode uses your live account and live records.
+            <p className="mt-6 rounded-xl border border-primary-100 bg-primary-50 px-3 py-2.5 text-center text-xs text-primary-700">
+              Live mode uses your account and current welfare records.
             </p>
           )}
 
-          <p className="mt-6 text-center text-xs text-neutral-400">
-            <Link to="/" className="hover:text-neutral-600">← Back to website</Link>
-          </p>
-        </div>
+          <div className="mt-8 flex items-center justify-between border-t border-neutral-100 pt-5 text-xs text-neutral-400">
+            <Link to="/" className="transition-colors hover:text-primary-700">← Back to website</Link>
+            <span>© 2026 KHWWC</span>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
