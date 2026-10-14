@@ -67,4 +67,38 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .private-shell .bg-primary-50 { background-color: #e7f6ff; }
+  .private-shell .bg-primary-100 { background-color: #d5efff; }
+  .private-shell .bg-primary-200 { background-color: #a8ddff; }
+  .private-shell .bg-primary-300 { background-color: #6fc7ff; }
+  .private-shell .bg-primary-400 { background-color: #30b5ff; }
+  .private-shell .bg-primary-500 { background-color: #0b8ff0; }
+  .private-shell .bg-primary-600 { background-color: #0876d1; }
+  .private-shell .bg-primary-700 { background-color: #0756a8; }
+  .private-shell .bg-primary-800 { background-color: #063f80; }
+  .private-shell .bg-primary-900 { background-color: #032b5c; }
+  .private-shell .bg-primary-950 { background-color: #021b3a; }
+  .private-shell .text-primary-400 { color: #30b5ff; }
+  .private-shell .text-primary-500 { color: #0b8ff0; }
+  .private-shell .text-primary-600 { color: #0876d1; }
+  .private-shell .text-primary-700 { color: #0756a8; }
+  .private-shell .text-primary-800 { color: #063f80; }
+  .private-shell .text-primary-900 { color: #032b5c; }
+  .private-shell .border-primary-100 { border-color: #d5efff; }
+  .private-shell .border-primary-200 { border-color: #a8ddff; }
+  .private-shell .border-primary-400 { border-color: #30b5ff; }
+  .private-shell .border-primary-500 { border-color: #0b8ff0; }
+  .private-shell .hover\:bg-primary-600:hover { background-color: #0876d1; }
+  .private-shell .hover\:text-primary-400:hover { color: #30b5ff; }
+  .private-shell .focus\:border-primary-500:focus { border-color: #0b8ff0; }
+  .private-shell .focus\:ring-primary-500\/20:focus { --tw-ring-color: rgb(11 143 240 / 0.2); }
+  .private-shell .bg-success-50 { background-color: #e5fff4; }
+  .private-shell .bg-success-100 { background-color: #c6fbe5; }
+  .private-shell .bg-success-500 { background-color: #18c98b; }
+  .private-shell .bg-success-600 { background-color: #0ca875; }
+  .private-shell .text-success-600 { color: #087d5d; }
+  .private-shell .text-success-700 { color: #066247; }
+  .private-shell .border-success-200 { border-color: #8af0c8; }
 }
+

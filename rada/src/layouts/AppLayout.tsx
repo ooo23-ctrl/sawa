@@ -70,7 +70,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
   const allRoles: UserRole[] = ['member', 'admin', 'treasurer', 'secretary', 'chairperson', 'office', 'super-admin'];
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex">
+    <div className="private-shell min-h-screen bg-neutral-50 flex">
       {/* Desktop Sidebar — N26 dark surface */}
       <aside className="hidden lg:flex w-64 flex-col bg-neutral-950 fixed inset-y-0 left-0 z-30">
         <div className="px-5 py-5 border-b border-white/5">
