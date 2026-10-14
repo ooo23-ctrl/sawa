@@ -2,206 +2,122 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Wallet, AlertCircle, HeartHandshake, PiggyBank,
-  Calendar, Bell, Download, ArrowRight, FileText, CreditCard, Landmark, Copy, CheckCircle,
+  ArrowRight, BarChart3, Bell, Check, CreditCard, Download,
+  FileText, HeartHandshake, History, Landmark, PiggyBank, ShieldCheck,
+  User, WalletCards,
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { mockMember } from '@/api/mock';
 import { queryKeys } from '@/lib/query';
-import {
-  Card, StatCard, Badge, Button, PageHeader, SkeletonCard, SkeletonRow, EmptyState, ErrorState,
-} from '@/components/ui';
+import { ErrorState, LoadingState } from '@/components/ui';
 import { PaymentModal } from '@/components/PaymentModal';
-import { formatCurrency, formatCurrencyShort, formatDate } from '@/lib/format';
-import type { Contribution, EventItem } from '@/types';
+import { formatCurrency } from '@/lib/format';
 
 const MONTHLY_CONTRIBUTION = 2000;
-const BANK_DETAILS = { account: 'KHWWC Welfare', accountNo: '0123 4567 8901', paybill: '522522', reference: 'CONTRIBUTUTION' };
+const BANK_DETAILS = { account: 'KHWWC Welfare', accountNo: '0123 4567 8901', paybill: '522522', reference: 'CONTRIBUTION' };
+
+const shortcuts = [
+  { label: 'Contributions', path: '/member/downloads', icon: PiggyBank },
+  { label: 'Penalties', path: '/member/pay-penalty', icon: ShieldCheck },
+  { label: 'Welfare', path: '/member/donate', icon: HeartHandshake },
+  { label: 'Fund Drive', path: '/member/donate', icon: WalletCards },
+  { label: 'Statements', path: '/member/downloads', icon: FileText },
+  { label: 'Member Stats', path: '/member/downloads', icon: BarChart3 },
+];
 
 export default function MemberDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [payOpen, setPayOpen] = useState(false);
   const [payAmount, setPayAmount] = useState(MONTHLY_CONTRIBUTION);
-  const [copied, setCopied] = useState(false);
   const [paySuccess, setPaySuccess] = useState('');
+  const [paymentMenuOpen, setPaymentMenuOpen] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: queryKeys.memberDashboard,
     queryFn: () => mockMember.dashboard(),
   });
 
+  if (isLoading) return <LoadingState text="Loading your member dashboard..." />;
+  if (isError || !data) return <ErrorState message="We couldn't load your dashboard." onRetry={() => refetch()} />;
+
+  const firstName = user?.name?.split(' ')[0] ?? 'Member';
+  const outstanding = Math.max(data.penalties_total, 0);
+
+  const openPayment = (amount: number) => {
+    setPayAmount(amount);
+    setPaymentMenuOpen(false);
+    setPayOpen(true);
+  };
+
   const handlePaySuccess = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.memberDashboard });
     setPayOpen(false);
-    setPaySuccess('Contribution payment confirmed successfully.');
-    setTimeout(() => setPaySuccess(''), 4000);
+    setPaySuccess('Payment status updated successfully.');
+    window.setTimeout(() => setPaySuccess(''), 4000);
   };
-
-  const copyBankDetails = () => {
-    const text = `Bank: ${BANK_DETAILS.account}\nPaybill: ${BANK_DETAILS.paybill}\nAccount No: ${BANK_DETAILS.accountNo}`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-5">
-        <PageHeader title="Dashboard" subtitle="Welcome back" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
-        </div>
-        <Card className="p-5"><SkeletonRow /></Card>
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return <ErrorState message="We couldn't load your dashboard." onRetry={() => refetch()} />;
-  }
-
-  const upcoming = data.upcoming_events as EventItem[];
-  const recent = data.recent_contributions as Contribution[];
-  const firstName = user?.name?.split(' ')[0] ?? 'Member';
-  const outstanding = data.penalties_total > 0 ? data.penalties_total : 0;
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title={`Welcome, ${firstName}`}
-        subtitle="Here's an overview of your welfare account"
-        action={
-          data.unread_notifications > 0 ? (
-            <Link to="/member/notifications" className="inline-flex items-center gap-2">
-              <span className="relative inline-flex w-9 h-9 rounded-xl bg-primary-50 text-primary-700 items-center justify-center">
-                <Bell size={18} />
-                <span className="absolute -top-1 -right-1 bg-error-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                  {data.unread_notifications}
-                </span>
-              </span>
-            </Link>
-          ) : undefined
-        }
-      />
-
-      {paySuccess && (
-        <div className="flex items-start gap-2 p-3 rounded-xl bg-success-50 border border-success-200 text-sm text-success-700">
-          <CheckCircle size={16} className="flex-shrink-0 mt-0.5" />
-          <span>{paySuccess}</span>
-        </div>
-      )}
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total Contributions" value={formatCurrency(data.contributions_total)} icon={<PiggyBank size={20} />} color="primary" />
-        <StatCard label="Penalties Outstanding" value={formatCurrencyShort(data.penalties_total)} icon={<AlertCircle size={20} />} color={data.penalties_total > 0 ? 'error' : 'success'} />
-        <StatCard label="Donations Made" value={formatCurrencyShort(data.donations_total)} icon={<HeartHandshake size={20} />} color="accent" />
-        <StatCard label="Wallet Balance" value={formatCurrencyShort(data.wallet_balance)} icon={<Wallet size={20} />} color="success" />
-      </div>
-
-      {/* Contribution payment + bank details */}
-      <Card className="p-5">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <h3 className="text-sm font-semibold text-neutral-900 mb-2">Monthly Contribution</h3>
-            <p className="text-xs text-neutral-500 mb-3">Pay your monthly contribution of {formatCurrency(MONTHLY_CONTRIBUTION)} via M-Pesa or bank transfer.</p>
-            <div className="flex flex-wrap gap-3">
-              <Button onClick={() => { setPayAmount(outstanding > 0 ? outstanding : MONTHLY_CONTRIBUTION); setPayOpen(true); }} className="inline-flex items-center gap-2">
-                <CreditCard size={16} /> {outstanding > 0 ? `Pay Outstanding ${formatCurrency(outstanding)}` : `Pay ${formatCurrency(MONTHLY_CONTRIBUTION)}`}
-              </Button>
-              <Link to="/member/donate"><Button variant="secondary" className="inline-flex items-center gap-2"><HeartHandshake size={16} /> Donate</Button></Link>
-              <Link to="/member/pay-penalty"><Button variant="secondary" className="inline-flex items-center gap-2"><AlertCircle size={16} /> Pay Penalty</Button></Link>
-            </div>
+    <div
+      className="relative -mx-4 -my-5 min-h-[calc(100vh+5rem)] overflow-hidden bg-[#0d75d6] bg-cover bg-center text-white sm:-mx-6 lg:-mx-8 lg:-my-5"
+      style={{ backgroundImage: "linear-gradient(180deg, rgba(14,120,214,.22), rgba(3,78,165,.48)), url('/images/image%20copy%202.png')" }}
+    >
+      <div className="relative z-10 mx-auto max-w-2xl px-5 pb-28 pt-8 sm:px-10">
+        <div className="flex items-center gap-3">
+          <img src="/images/image%20copy%203.png" alt="KHWWC logo" className="h-16 w-16 rounded-full bg-white object-cover shadow-lg ring-2 ring-white/70" />
+          <div className="min-w-0 flex-1">
+            <p className="text-lg font-medium text-white/90">Good morning,</p>
+            <h1 className="truncate text-2xl font-bold tracking-tight sm:text-3xl">{firstName} {user?.name?.split(' ').slice(1).join(' ')}</h1>
+            <p className="mt-1 flex items-center gap-2 text-sm text-cyan-100"><span>Member account</span><span className="h-2.5 w-2.5 rounded-full bg-[#25e6a0]" />Active</p>
           </div>
-          <div className="sm:border-l sm:border-neutral-100 sm:pl-4 sm:w-64">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-semibold text-neutral-700 inline-flex items-center gap-1.5"><Landmark size={13} /> Bank Details</h4>
-              <button onClick={copyBankDetails} className="text-xs text-primary-600 inline-flex items-center gap-1 hover:underline">
-                {copied ? <><CheckCircle size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
-              </button>
-            </div>
-            <div className="text-xs text-neutral-600 space-y-0.5">
-              <p>Account: {BANK_DETAILS.account}</p>
-              <p>Paybill: {BANK_DETAILS.paybill}</p>
-              <p>Account No: {BANK_DETAILS.accountNo}</p>
-            </div>
+          <div className="hidden h-16 w-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/15 sm:flex">
+            {user?.avatar ? <img src={user.avatar} alt="" className="h-full w-full rounded-full object-cover" /> : <User size={30} />}
           </div>
         </div>
-      </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent contributions */}
-        <Card className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-neutral-900">Recent Contributions</h2>
-            <Link to="/member/downloads" className="text-xs font-medium text-primary-700 inline-flex items-center gap-1 hover:underline">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-          {recent.length === 0 ? (
-            <EmptyState icon={<FileText size={22} />} title="No contributions yet" message="Your contribution history will appear here." />
-          ) : (
-            <ul className="divide-y divide-neutral-50">
-              {recent.map((c) => (
-                <li key={c.id} className="flex items-center justify-between gap-3 py-3">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-neutral-900 truncate">{c.type}</p>
-                    <p className="text-xs text-neutral-500">{formatDate(c.date)} · {c.method}</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold text-neutral-900">{formatCurrency(c.amount)}</p>
-                    <Badge status={c.status}>{c.status}</Badge>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Card>
+        <section className="mt-12 text-center">
+          <p className="text-5xl font-bold tracking-tight drop-shadow-[0_0_14px_rgba(255,255,255,.6)] sm:text-7xl">{formatCurrency(data.contributions_total)}</p>
+          <p className="mt-2 text-xl font-medium text-cyan-100">Total contributions <span aria-hidden="true">◉</span></p>
+          <div className="mx-auto mt-5 h-px max-w-md bg-gradient-to-r from-transparent via-cyan-200 to-transparent" />
+        </section>
 
-        {/* Upcoming events */}
-        <Card className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-neutral-900">Upcoming Events</h2>
-            <Link to="/member/events" className="text-xs font-medium text-primary-700 inline-flex items-center gap-1 hover:underline">
-              View all <ArrowRight size={12} />
+        {paySuccess && <div className="mt-4 rounded-xl border border-[#25e6a0]/50 bg-[#25e6a0]/20 px-4 py-3 text-center text-sm text-white"><Check size={16} className="mr-2 inline" />{paySuccess}</div>}
+
+        <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-8 sm:gap-x-20">
+          {shortcuts.map(({ label, path, icon: Icon }) => (
+            <Link key={label} to={path} className="group flex flex-col items-center gap-2 text-center transition-transform hover:-translate-y-1">
+              <span className="flex h-20 w-20 items-center justify-center rounded-3xl border border-cyan-100/50 bg-white/15 text-cyan-50 shadow-[0_12px_25px_rgba(0,32,105,.25)] backdrop-blur-sm transition-colors group-hover:bg-white/25 sm:h-24 sm:w-24"><Icon size={42} strokeWidth={1.6} /></span>
+              <span className="text-base font-semibold sm:text-lg">{label}</span>
             </Link>
-          </div>
-          {upcoming.length === 0 ? (
-            <EmptyState icon={<Calendar size={22} />} title="No upcoming events" message="Check back later for new events." />
-          ) : (
-            <ul className="space-y-3">
-              {upcoming.map((e) => (
-                <li key={e.id} className="flex gap-3 p-3 rounded-xl bg-neutral-50">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-100 text-primary-700 flex flex-col items-center justify-center">
-                    <span className="text-xs font-medium leading-none">{new Date(e.date).toLocaleDateString('en-KE', { month: 'short' })}</span>
-                    <span className="text-lg font-bold leading-none">{new Date(e.date).getDate()}</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-neutral-900 truncate">{e.title}</p>
-                    <p className="text-xs text-neutral-500 truncate">{e.location}</p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <Badge status={e.status}>{e.status}</Badge>
-                      <span className="text-xs text-neutral-400">{e.attendees_count} attending</span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          ))}
+        </div>
+
+        <div className="mt-10 grid grid-cols-3 divide-x divide-white/50 text-center">
+          <div><p className="text-2xl font-bold sm:text-3xl">{data.contributions_count}</p><p className="text-xs text-cyan-100 sm:text-sm">Contributions</p></div>
+          <div><p className="text-2xl font-bold sm:text-3xl">{formatCurrency(data.donations_total)}</p><p className="text-xs text-cyan-100 sm:text-sm">Welfare</p></div>
+          <div><p className="text-2xl font-bold sm:text-3xl">{data.unread_notifications}</p><p className="text-xs text-cyan-100 sm:text-sm">Pending</p></div>
+        </div>
+
+        <div className="relative mt-10">
+          <button onClick={() => setPaymentMenuOpen(value => !value)} className="flex w-full items-center justify-center gap-3 rounded-full border border-cyan-100/80 bg-gradient-to-r from-[#287fe8] to-[#39cfff] px-5 py-4 text-lg font-bold shadow-[0_8px_25px_rgba(0,43,114,.3)] transition-transform hover:scale-[1.01]"><CreditCard size={22} />Make a payment<ArrowRight size={22} /></button>
+          {paymentMenuOpen && (
+            <div className="absolute left-1/2 top-full z-20 mt-3 w-[calc(100%-1rem)] -translate-x-1/2 rounded-2xl border border-white/50 bg-[#4d9fe8]/90 p-3 shadow-xl backdrop-blur-md">
+              <button onClick={() => openPayment(outstanding || MONTHLY_CONTRIBUTION)} className="flex w-full items-center gap-3 border-b border-white/25 px-3 py-3 text-left text-sm font-semibold hover:bg-white/10"><ShieldCheck size={20} />Penalty payment<ArrowRight className="ml-auto" size={17} /></button>
+              <button onClick={() => openPayment(MONTHLY_CONTRIBUTION)} className="flex w-full items-center gap-3 border-b border-white/25 px-3 py-3 text-left text-sm font-semibold hover:bg-white/10"><WalletCards size={20} />Fund drive contribution<ArrowRight className="ml-auto" size={17} /></button>
+              <button onClick={() => openPayment(MONTHLY_CONTRIBUTION)} className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm font-semibold hover:bg-white/10"><HeartHandshake size={20} />Welfare contribution<ArrowRight className="ml-auto" size={17} /></button>
+            </div>
           )}
-        </Card>
+        </div>
+
+        <div className="mt-8 flex items-center justify-around rounded-3xl border border-white/20 bg-white/10 px-2 py-3 backdrop-blur-md lg:hidden">
+          <Link to="/member" className="flex flex-col items-center gap-1 text-cyan-100"><Landmark size={22} /><span className="text-xs">Home</span></Link>
+          <Link to="/member/downloads" className="flex flex-col items-center gap-1 text-cyan-100"><History size={22} /><span className="text-xs">History</span></Link>
+          <Link to="/member/notifications" className="flex flex-col items-center gap-1 text-cyan-100"><Bell size={22} /><span className="text-xs">Notifications</span></Link>
+          <Link to="/member/profile" className="flex flex-col items-center gap-1 text-cyan-100"><User size={22} /><span className="text-xs">Profile</span></Link>
+        </div>
       </div>
 
-      <PaymentModal
-        open={payOpen}
-        onClose={() => setPayOpen(false)}
-        amount={payAmount}
-        accountRef="CONTRIBUTUTION-member"
-        paymentType="monthly_contribution"
-        transactionDesc="Monthly contribution payment"
-        bankDetails={BANK_DETAILS}
-        onSuccess={handlePaySuccess}
-      />
+      <PaymentModal open={payOpen} onClose={() => setPayOpen(false)} amount={payAmount} accountRef="CONTRIBUTION-member" paymentType="monthly_contribution" transactionDesc="Monthly contribution payment" bankDetails={BANK_DETAILS} onSuccess={handlePaySuccess} />
     </div>
   );
 }

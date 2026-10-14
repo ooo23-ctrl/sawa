@@ -16,6 +16,7 @@ import type {
   BankTransaction,
   Notification,
   EventItem,
+  NewsArticle,
   Memo,
   MemoTemplate,
   OrganizationSettings,
@@ -62,6 +63,8 @@ export const treasurerApi = {
 
   getDocuments: () => api.get<Document[]>('/treasurer/documents'),
 
+  downloadDocument: (id: string) => api.download(`/treasurer/documents/${id}/download`, `document-${id}.pdf`),
+
   getReports: () => api.get<{ name: string; type: string; date: string; size: string }[]>('/treasurer/reports'),
 
   exportReport: (type: string, params?: { from?: string; to?: string }) => {
@@ -70,6 +73,10 @@ export const treasurerApi = {
       : '';
     return api.download(`/treasurer/reports/${type}/export${search}`, `report-${type}.pdf`);
   },
+
+  getImportHistory: () => api.get<unknown[]>('/treasurer/import-batches'),
+
+  getImportBatchDetail: (id: string) => api.get<unknown[]>(`/treasurer/import-batches/${id}`),
 
   getBankSync: () => api.get<{ last_sync: string; status: string; new_transactions: number }>('/treasurer/bank-sync'),
 
@@ -177,6 +184,11 @@ export const adminApi = {
 
   getUnmatchedPayments: () => api.get<Contribution[]>('/admin/unmatched'),
 
+  getBankUnmatched: () => api.get<unknown[]>('/admin/bank-unmatched'),
+
+  reconcileBankUnmatched: (id: string, data: { match_type: string; member_id: string; notes?: string }) =>
+    api.post<{ message: string }>(`/admin/bank-unmatched/${id}/reconcile`, data),
+
   matchPayment: (id: string, memberId: string) =>
     api.post<{ message: string }>(`/admin/unmatched/${id}/match`, { member_id: memberId }),
 
@@ -186,6 +198,12 @@ export const adminApi = {
     api.post<{ message: string }>('/admin/sms', data),
 
   getEvents: () => api.get<EventItem[]>('/admin/events'),
+
+  getNews: (page = 1) => api.get<Paginated<NewsArticle>>('/admin/news', { page }),
+
+  createNews: (data: Partial<NewsArticle>) => api.post<NewsArticle>('/admin/news', data),
+
+  updateNews: (id: string, data: Partial<NewsArticle>) => api.put<NewsArticle>(`/admin/news/${id}`, data),
 
   createEvent: (data: Partial<EventItem>) => api.post<EventItem>('/admin/events', data),
 
@@ -219,4 +237,16 @@ export const adminApi = {
     formData.append('file', file);
     return api.post<{ message: string; imported: number }>('/admin/beneficiary-import', formData);
   },
+
+  getSettings: () => api.get<Record<string, string>>('/admin/settings'),
+
+  updateSettings: (data: Record<string, string>) => api.put<{ message: string }>('/admin/settings', data),
+
+  updateOfficeSignatures: (data: Record<string, string>) => api.put<{ message: string }>('/admin/office/signatures', data),
+
+  updateRegistrationSettings: (data: Record<string, string>) => api.put<{ message: string }>('/admin/registration-settings', data),
+
+  getRegistrationApplicants: (page = 1) => api.get<Paginated<Member>>('/admin/registration-applicants', { page }),
+
+  getExecutiveBadges: (page = 1) => api.get<Paginated<Member>>('/admin/executive-badges', { page }),
 };

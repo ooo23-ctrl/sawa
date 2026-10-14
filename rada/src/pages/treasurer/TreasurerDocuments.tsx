@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { FileText, Download } from 'lucide-react';
 import { mockTreasurer } from '@/api/mock';
 import { queryKeys } from '@/lib/query';
@@ -10,6 +10,7 @@ export default function TreasurerDocuments() {
     queryKey: queryKeys.treasurerDocuments,
     queryFn: () => mockTreasurer.getDocuments(),
   });
+  const download = useMutation({ mutationFn: (id: string) => mockTreasurer.downloadDocument(id) });
 
   return (
     <div>
@@ -17,6 +18,7 @@ export default function TreasurerDocuments() {
       <Card className="p-4">
         {isLoading && <LoadingState />}
         {isError && <ErrorState message="Failed to load documents" />}
+        {download.isError && <p className="mb-3 rounded-lg bg-error-50 px-3 py-2 text-sm text-error-700">Download failed. Please try again.</p>}
         {!isLoading && !isError && (data?.length === 0 ? <EmptyState icon={<FileText size={24} />} title="No documents" /> : (
           <div className="divide-y divide-neutral-50">
             {data?.map((doc: any) => (
@@ -30,7 +32,9 @@ export default function TreasurerDocuments() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge status={doc.status}>{doc.status}</Badge>
-                  <Button variant="ghost" size="sm"><Download size={14} /></Button>
+                  <Button variant="ghost" size="sm" onClick={() => download.mutate(doc.id)} disabled={download.isPending} aria-label={`Download ${doc.title}`}>
+                    <Download size={14} />
+                  </Button>
                 </div>
               </div>
             ))}

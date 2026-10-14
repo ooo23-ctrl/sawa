@@ -257,7 +257,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
         </main>
 
         {/* Mobile Bottom Nav (Member only) */}
-        {isMember && (
+        {isMember && location.pathname !== '/member' && (
           <nav className="lg:hidden fixed bottom-0 inset-x-0 z-20 bg-white border-t border-neutral-200 flex items-center justify-around px-2 py-1.5 safe-bottom">
             {memberBottomNav.map(item => (
               <Link

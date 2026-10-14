@@ -126,8 +126,8 @@ export function AdminDocuments() {
 export function AdminNews() {
   return <GenericListPage config={{
     title: 'News', subtitle: 'Create and manage news articles', icon: Newspaper,
-    fetchFn: () => mockAdmin.getEvents().then(d => ({ data: d, current_page: 1, last_page: 1, total: d.length })),
-    queryKey: () => ['admin', 'news'],
+    fetchFn: ({ page }) => mockAdmin.getNews(page),
+    queryKey: (p) => ['admin', 'news', p.page],
     columns: [
       { key: 'title', label: 'Title', render: r => <span className="font-medium">{r.title}</span> },
       { key: 'date', label: 'Date', render: r => formatDate(r.date) },
@@ -188,7 +188,7 @@ export function AdminSettings() {
       { key: 'phone', label: 'Contact Phone', value: '+254 700 100 200' },
       { key: 'address', label: 'Address', value: 'Kerugoya, Kirinyaga County' },
     ]}
-    onSubmit={async () => {}}
+    onSubmit={async (data) => { await mockAdmin.updateSettings(data); }}
   />;
 }
 
@@ -208,7 +208,7 @@ export function AdminOfficeSignatures() {
   return <GenericFormPage
     title="Office Signatures" subtitle="Manage official office signatures" icon={PenTool}
     fields={[{ key: 'chair', label: 'Chairperson Signature', value: 'Dr. Robert Kibochi' }, { key: 'treasurer', label: 'Treasurer Signature', value: 'David Mwangi Kuria' }, { key: 'secretary', label: 'Secretary Signature', value: 'Lucy Wangari Kamau' }]}
-    onSubmit={async () => {}}
+    onSubmit={async (data) => { await mockAdmin.updateOfficeSignatures(data); }}
   />;
 }
 
@@ -295,15 +295,15 @@ export function AdminRegistrationSettings() {
       { key: 'fee', label: 'Registration Fee (KES)', type: 'number', value: '5000' },
       { key: 'monthly', label: 'Monthly Contribution (KES)', type: 'number', value: '2000' },
     ]}
-    onSubmit={async () => {}}
+    onSubmit={async (data) => { await mockAdmin.updateRegistrationSettings(data); }}
   />;
 }
 
 export function AdminRegistrationManagement() {
   return <GenericListPage config={{
     title: 'Registration Management', subtitle: 'Review membership applications', icon: ClipboardList,
-    fetchFn: () => Promise.resolve({ data: [], current_page: 1, last_page: 1, total: 0 }),
-    queryKey: () => ['admin', 'registration-management'],
+    fetchFn: ({ page }) => mockAdmin.getRegistrationApplicants(page),
+    queryKey: (p) => ['admin', 'registration-management', p.page],
     columns: [
       { key: 'name', label: 'Applicant' },
       { key: 'email', label: 'Email' },
@@ -328,8 +328,8 @@ export function AdminRegistrationApiDocs() {
 export function AdminExecutiveBadges() {
   return <GenericListPage config={{
     title: 'Executive Badges', subtitle: 'Manage executive role badges and profiles', icon: BadgeCheck,
-    fetchFn: () => Promise.resolve({ data: [], current_page: 1, last_page: 1, total: 0 }),
-    queryKey: () => ['admin', 'executive-badges'],
+    fetchFn: ({ page }) => mockAdmin.getExecutiveBadges(page),
+    queryKey: (p) => ['admin', 'executive-badges', p.page],
     columns: [
       { key: 'name', label: 'Name' },
       { key: 'title', label: 'Title' },

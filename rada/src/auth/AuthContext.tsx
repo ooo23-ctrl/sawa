@@ -14,7 +14,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
   login: (phone: string, password: string) => Promise<AuthUser>;
-  logout: () => void;
+  logout: () => Promise<void>;
   switchRole: (role: UserRole) => void;
   updatePassword: (current: string, next: string) => Promise<void>;
   demoMode: boolean;
@@ -47,10 +47,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return result.user;
   }, [demoMode]);
 
-  const logout = useCallback(() => {
-    clearToken();
-    setUser(null);
-  }, []);
+  const logout = useCallback(async () => {
+    try {
+      if (!demoMode) await authApi.logout();
+    } finally {
+      clearToken();
+      setUser(null);
+    }
+  }, [demoMode]);
 
   const switchRole = useCallback((role: UserRole) => {
     if (!demoMode || !user) return;

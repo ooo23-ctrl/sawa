@@ -169,6 +169,8 @@ export const mockTreasurer = {
     () => treasurerApi.approveWithdrawal(id, action as any), { message: `Withdrawal ${action}d` },
   ),
   getDocuments: () => tryApi(() => treasurerApi.getDocuments(), demoDocuments),
+  downloadDocument: (id: string) => tryApi(() => treasurerApi.downloadDocument(id), undefined),
+  exportReport: (type: string) => tryApi(() => treasurerApi.exportReport(type), undefined),
   getReports: () => tryApi(() => treasurerApi.getReports(), [
     { name: 'Monthly Contributions Report - Oct 2026', type: 'contributions', date: daysAgoStr(2), size: '245 KB' },
     { name: 'Wallet Summary Report - Q3 2026', type: 'wallets', date: daysAgoStr(5), size: '180 KB' },
@@ -205,8 +207,8 @@ export const mockTreasurer = {
   getPayouts: () => tryApi(() => treasurerApi.getPayouts(), demoPayouts),
   createPayout: (data: any) => tryApi(() => treasurerApi.createPayout(data), { ...data, id: 'po-new-' + Date.now(), reference: 'PAY-' + Date.now(), status: 'pending', created_at: new Date().toISOString() } as any),
   getEligibleMembers: (payoutType: string) => tryApi(() => treasurerApi.getEligibleMembers(payoutType as any), demoEligibleMembers),
-  getImportHistory: () => tryApi(() => Promise.reject(new Error('Not configured')), demoImportBatches),
-  getImportBatchDetail: (id: string) => tryApi(() => Promise.reject(new Error('Not configured')),
+  getImportHistory: () => tryApi(() => treasurerApi.getImportHistory(), demoImportBatches),
+  getImportBatchDetail: (id: string) => tryApi(() => treasurerApi.getImportBatchDetail(id),
     demoImportBatchRows.filter((r: any) => r.batch_id === id)),
 };
 
@@ -249,12 +251,15 @@ export const mockAdmin = {
   getUnmatchedPayments: () => tryApi(() => adminApi.getUnmatchedPayments(),
     demoBankTransactions.filter(t => !t.matched).map((t, i) => ({ ...demoContributions[i % demoContributions.length], id: t.id, reference: t.reference, status: 'pending' as const }))),
   matchPayment: (id: string, _memberId: string) => tryApi(() => adminApi.matchPayment(id, _memberId), { message: 'Payment matched successfully' }),
-  getBankUnmatched: () => tryApi(() => Promise.reject(new Error('Not configured')), demoUnmatchedTransactions),
-  reconcileBankUnmatched: (_id: string, _data: any) => tryApi(() => Promise.reject(new Error('Not configured')),
+  getBankUnmatched: () => tryApi(() => adminApi.getBankUnmatched(), demoUnmatchedTransactions),
+  reconcileBankUnmatched: (id: string, data: any) => tryApi(() => adminApi.reconcileBankUnmatched(id, data),
     { message: 'Transaction reconciled' } as any),
   getNotifications: () => tryApi(() => adminApi.getNotifications(), demoNotifications),
   sendBulkSms: (_data: any) => tryApi(() => adminApi.sendBulkSms(_data), { message: 'SMS sent to 245 recipients' }),
   getEvents: () => tryApi(() => adminApi.getEvents(), demoEvents),
+  getNews: (page = 1) => tryApi(() => adminApi.getNews(page), () => paginate(demoNews, page)),
+  createNews: (data: any) => tryApi(() => adminApi.createNews(data), { ...data, id: 'news-new-' + Date.now() } as any),
+  updateNews: (id: string, data: any) => tryApi(() => adminApi.updateNews(id, data), { ...demoNews[0], ...data, id } as any),
   createEvent: (data: any) => tryApi(() => adminApi.createEvent(data), { ...data, id: 'e-new-' + Date.now() } as any),
   getDocuments: () => tryApi(() => adminApi.getDocuments(), demoDocuments),
   getPenalties: () => tryApi(() => adminApi.getPenalties(), demoPenalties),
@@ -268,6 +273,17 @@ export const mockAdmin = {
   ),
   importExcel: (_file: File) => tryApi(() => adminApi.importExcel(_file), { message: 'Import successful', imported: 12 }),
   importBeneficiaries: (_file: File) => tryApi(() => adminApi.importBeneficiaries(_file), { message: 'Import successful', imported: 8 }),
+  getSettings: () => tryApi(() => adminApi.getSettings(), {
+    org_name: demoSettings.organization_name,
+    email: demoSettings.email,
+    phone: demoSettings.phone,
+    address: demoSettings.address,
+  }),
+  updateSettings: (data: any) => tryApi(() => adminApi.updateSettings(data), { message: 'Settings updated' }),
+  updateOfficeSignatures: (data: any) => tryApi(() => adminApi.updateOfficeSignatures(data), { message: 'Signatures updated' }),
+  updateRegistrationSettings: (data: any) => tryApi(() => adminApi.updateRegistrationSettings(data), { message: 'Registration settings updated' }),
+  getRegistrationApplicants: (page = 1) => tryApi(() => adminApi.getRegistrationApplicants(page), () => paginate(demoRegistrationApplicants as any[], page)),
+  getExecutiveBadges: (page = 1) => tryApi(() => adminApi.getExecutiveBadges(page), () => paginate(demoMembers as any[], page)),
 };
 
 export const mockWebsite = {

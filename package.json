@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "lint": "eslint rada/src",
+    "lint": "eslint --config rada/eslint.config.js rada/src",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit -p rada/tsconfig.app.json"
   },

@@ -91,8 +91,9 @@ async function request<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const token = getToken();
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     Accept: 'application/json',
     ...((options.headers as Record<string, string>) || {}),
   };
@@ -151,9 +152,10 @@ export const api = {
   },
 
   post<T>(path: string, body?: unknown) {
+    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
     return request<T>(path, {
       method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
+      body: isFormData ? body : body ? JSON.stringify(body) : undefined,
     });
   },
 
